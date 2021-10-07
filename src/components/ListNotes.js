@@ -1,0 +1,34 @@
+import React, {Component} from 'react';
+import {NavLink} from 'react-router-dom';
+import moment from 'moment';
+
+
+class ListNotes extends Component{
+
+    renderFormattedDate(date){
+        return moment(date).format('DD MMM YYYY');
+    }
+    render() {
+        //if there are no notes to list, we will display a div with a message
+        if (!this.props.notes || this.props.notes.length === 0) {
+            return (<div className="no-notes">Oops! It seems that you have no notes. Try adding one? 😊</div>)
+        }
+        //if there are notes to list, we will display a div with the notes
+        const listItems = this.props.notes.map((note) =>
+                //nav link to the div of respective note without displaying the id
+                <NavLink activeClassName='active' to={`/note/${note.id}`}
+                      className="list-group-item"
+                      key={note.id.toString()}
+                      onClick={this.props.viewNote.bind(this, note.id)}>
+                    {/*Show note title*/}
+                    <div className="text-truncate primary">{note.title}</div>
+                    {/*Show note date*/}
+                    <div className="font-weight-light font-italic small">{this.renderFormattedDate(note.date)}</div>
+                </NavLink >
+        );
+        //Displays the notes as a list
+        return (<ul className="list-group">{listItems}</ul>);
+    }
+}
+
+export default ListNotes;
